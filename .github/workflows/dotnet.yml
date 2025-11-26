@@ -1,34 +1,13 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+name: CI + Trigger GitLab CD
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ master ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ master ]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-
-  deploy:
-    needs: build
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,12 +19,30 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Publish
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run tests
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Publish build output
       run: dotnet publish -c Release -o output
 
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
       with:
-        app-name: YOUR_AZURE_APP_NAME
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-        package: output
+        name: backend-build
+        path: output/
+
+    - name: Trigger GitLab CD
+      if: success()
+      run: |
+        curl -X POST \
+        -F token=$GITLAB_TRIGGER \
+        -F ref=main \
+        https://gitlab.com/api/v4/projects/76407611/trigger/pipeline
+      env:
+        GITLAB_TRIGGER: ${{ secrets.GITLAB_TRIGGER }}
