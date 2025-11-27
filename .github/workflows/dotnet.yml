@@ -1,4 +1,4 @@
-name: CI + Trigger GitLab CD
+name: CI + Build Docker + Push + Trigger GitLab CD
 
 on:
   push:
@@ -9,6 +9,10 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write   # required for GHCR push
 
     steps:
     - name: Checkout code
@@ -28,14 +32,14 @@ jobs:
     - name: Run tests
       run: dotnet test --no-build --verbosity normal
 
-    - name: Publish build output
-      run: dotnet publish -c Release -o output
+    - name: Build Docker image
+      run: docker build -t ghcr.io/${{ github.repository_owner }}/productservice:latest .
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: backend-build
-        path: output/
+    - name: Login to GHCR
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Push Docker image
+      run: docker push ghcr.io/${{ github.repository_owner }}/productservice:latest
 
     - name: Trigger GitLab CD
       if: success()
