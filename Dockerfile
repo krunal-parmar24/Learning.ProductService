@@ -5,8 +5,8 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore Learning.ProductService.API/ProductService.API.csproj
-RUN dotnet publish Learning.ProductService.API/ProductService.API.csproj -c Release -o /app
+RUN dotnet restore Learning.ProductService.API/Learning.ProductService.API.csproj
+RUN dotnet publish Learning.ProductService.API/Learning.ProductService.API.csproj -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
