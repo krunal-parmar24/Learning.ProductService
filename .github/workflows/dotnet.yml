@@ -24,7 +24,7 @@ jobs:
           dotnet-version: '8.0'
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master  # official action [web:46][web:41]
+        uses: SonarSource/sonarcloud-github-action@v2
         with:
           args: >
             -Dsonar.projectKey=krunal-parmar24_Learning.ProductService
