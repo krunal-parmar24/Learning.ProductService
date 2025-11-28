@@ -25,6 +25,10 @@ jobs:
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master  # official action [web:46][web:41]
+        with:
+          args: >
+            -Dsonar.projectKey=krunal-parmar24_Learning.ProductService
+            -Dsonar.organization=krunal-parmar24
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN:  ${{ secrets.SONAR_TOKEN }}
