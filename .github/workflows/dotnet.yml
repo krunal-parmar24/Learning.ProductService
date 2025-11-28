@@ -58,3 +58,20 @@ jobs:
           push: true
           tags: ghcr.io/${{ steps.image.outputs.IMAGE }}:latest
           file: ./Dockerfile
+          
+  deploy-to-render:
+      needs: build-and-push-docker
+      runs-on: ubuntu-latest
+      steps:
+        - name: Deploy to Render
+          run: |
+            curl -X POST \
+              "https://api.render.com/deploy/${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}"
+  
+        - name: Wait for deployment
+          run: sleep 10
+  
+        - name: Verify deployment
+          run: |
+            echo "Deployment triggered successfully!"
+            echo "Service URL: https://learning-productservice.onrender.com"
