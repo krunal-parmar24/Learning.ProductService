@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="Learning.ProductService.API/Learning.ProductService.API.csproj" />
+  <Project Path="Learning.ProductService.Tests/Learning.ProductService.Tests.csproj" Id="24ede27e-07c5-49e9-b489-25495de2dd78" />
 </Solution>

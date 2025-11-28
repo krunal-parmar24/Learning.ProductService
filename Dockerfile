@@ -4,13 +4,13 @@ WORKDIR /src
 
 # Copy solution and project files
 COPY ./Learning.ProductService.slnx ./
-COPY ./Learning.ProductService.API/*.csproj ./Learning.ProductService.API/
 
 # Copy the rest of the source
 COPY . .
 
 # Restore dependencies
 RUN dotnet restore Learning.ProductService.API/Learning.ProductService.API.csproj
+RUN dotnet restore Learning.ProductService.Tests/Learning.ProductService.Tests.csproj
 
 # Build and publish
 WORKDIR /src/Learning.ProductService.API
