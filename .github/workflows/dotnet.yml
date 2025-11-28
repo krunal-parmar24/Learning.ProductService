@@ -1,4 +1,4 @@
-name: Build, Test, and Deploy
+name: Build, Test, and Deploy to Render
 
 on:
   push:
@@ -64,14 +64,37 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - name: Deploy to Render
+          id: deploy
           run: |
-            curl -X POST \
-              "https://api.render.com/deploy/${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}"
+            RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.RENDER_DEPLOY_WEBHOOK }}")
+            HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+            BODY=$(echo "$RESPONSE" | head -n-1)
+            
+            echo "HTTP Status Code: $HTTP_CODE"
+            echo "Response Body: $BODY"
+            
+            # Check if HTTP status is 2xx (success)
+            if [[ $HTTP_CODE =~ ^2[0-9][0-9]$ ]]; then
+              echo "✅ Deployment triggered successfully!"
+              echo "status=success" >> $GITHUB_OUTPUT
+            else
+              echo "❌ Deployment failed with HTTP status: $HTTP_CODE"
+              echo "status=failed" >> $GITHUB_OUTPUT
+              exit 1
+            fi
   
         - name: Wait for deployment
+          if: steps.deploy.outputs.status == 'success'
           run: sleep 10
   
         - name: Verify deployment
+          if: steps.deploy.outputs.status == 'success'
           run: |
-            echo "Deployment triggered successfully!"
+            echo "✅ Deployment verified successfully!"
             echo "Service URL: https://learning-productservice.onrender.com"
+  
+        - name: Deployment failed notification
+          if: steps.deploy.outputs.status == 'failed'
+          run: |
+            echo "❌ Render deployment failed. Please check the webhook URL and API key."
+            exit 1
