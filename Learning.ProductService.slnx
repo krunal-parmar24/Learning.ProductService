@@ -1,4 +1,7 @@
 <Solution>
   <Project Path="Learning.ProductService.API/Learning.ProductService.API.csproj" />
+  <Project Path="Learning.ProductService.Application/Learning.ProductService.Application.csproj" Id="6ce382bb-aab5-4999-a4f7-20598fdcddf8" />
+  <Project Path="Learning.ProductService.Domain/Learning.ProductService.Domain.csproj" Id="78f33cb0-846a-4e80-81a0-869eb0b2faa1" />
+  <Project Path="Learning.ProductService.Infrastructure/Learning.ProductService.Infrastructure.csproj" Id="72b7fb4b-3f83-405a-9328-b916d9054094" />
   <Project Path="Learning.ProductService.Tests/Learning.ProductService.Tests.csproj" Id="24ede27e-07c5-49e9-b489-25495de2dd78" />
 </Solution>
