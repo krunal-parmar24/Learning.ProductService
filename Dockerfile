@@ -11,6 +11,9 @@ COPY . .
 # Restore dependencies
 RUN dotnet restore Learning.ProductService.API/Learning.ProductService.API.csproj
 RUN dotnet restore Learning.ProductService.Tests/Learning.ProductService.Tests.csproj
+RUN dotnet restore Learning.ProductService.Domain/Learning.ProductService.Domain.csproj
+RUN dotnet restore Learning.ProductService.Infrastructure/Learning.ProductService.Infrastructure.csproj
+RUN dotnet restore Learning.ProductService.Application/Learning.ProductService.Application.csproj
 
 # Build and publish
 WORKDIR /src/Learning.ProductService.API
