@@ -1,4 +1,16 @@
+using Learning.ProductService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuration is automatically loaded by WebApplicationBuilder
+// It loads: appsettings.json -> appsettings.{Environment}.json -> Environment variables
+// The environment is determined by ASPNETCORE_ENVIRONMENT (default: Production)
+var configuration = builder.Configuration;
+var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<ProductDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // Add services to the container.
 
