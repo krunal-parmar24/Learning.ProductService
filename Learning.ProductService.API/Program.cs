@@ -1,4 +1,4 @@
-using Learning.ProductService.Infrastructure.Data;
+﻿using Learning.ProductService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -20,7 +20,7 @@ if (!string.IsNullOrEmpty(databaseUrl) && databaseUrl.StartsWith("postgres://"))
             Username = userInfo[0],
             Password = userInfo.Length > 1 ? userInfo[1] : string.Empty,
             Database = url.AbsolutePath.TrimStart('/'),
-            Port = url.Port,
+            Port = url.Port == -1 ? 5432 : url.Port,  // Default to 5432 if port not specified
             SslMode = SslMode.Require
         }.ConnectionString;
 
@@ -46,10 +46,29 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+// Safe database migration with error handling
+try
 {
-    var context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
-    context.Database.Migrate(); // Applies all pending migrations
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+        
+        // Ensure database is created and apply migrations
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+            Console.WriteLine("INFO: Database migrations applied successfully.");
+        }
+        else
+        {
+            Console.WriteLine("INFO: Database is up to date. No migrations needed.");
+        }
+    }
+}
+catch (Exception ex)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "ERROR: An error occurred during database migration. Service will start anyway.");
 }
 
 // Configure the HTTP request pipeline.
