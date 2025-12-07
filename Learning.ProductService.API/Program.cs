@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Render sets DATABASE_URL as an environment variable - check it FIRST before appsettings
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-if (!string.IsNullOrEmpty(databaseUrl) && databaseUrl.StartsWith("postgres://"))
+if (!string.IsNullOrEmpty(databaseUrl) && databaseUrl.StartsWith("postgresql://"))
 {
     try
     {
