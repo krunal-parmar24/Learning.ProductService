@@ -56,15 +56,23 @@ try
     {
         var context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
         
-        // Ensure database is created and apply migrations
-        if (context.Database.GetPendingMigrations().Any())
+        // Ensure database exists first (creates __EFMigrationsHistory table if needed)
+        context.Database.EnsureCreated();
+        Console.WriteLine("INFO: Database ensured to exist.");
+        
+        // Get applied migrations - this now works because the history table exists
+        var appliedMigrations = context.Database.GetAppliedMigrations().ToList();
+        var pendingMigrations = context.Database.GetPendingMigrations().ToList();
+        
+        if (pendingMigrations.Any())
         {
+            Console.WriteLine($"INFO: Found {pendingMigrations.Count} pending migration(s). Applying migrations...");
             context.Database.Migrate();
             Console.WriteLine("INFO: Database migrations applied successfully.");
         }
         else
         {
-            Console.WriteLine("INFO: Database is up to date. No migrations needed.");
+            Console.WriteLine($"INFO: Database is up to date. Applied migrations: {string.Join(", ", appliedMigrations.Select(m => m.Split('_').Last()))}");
         }
     }
 }
