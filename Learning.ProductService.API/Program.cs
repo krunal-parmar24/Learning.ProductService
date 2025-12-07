@@ -49,24 +49,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Safe database migration with error handling
-try
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
-        
-        // Apply migrations (preferred over EnsureCreated in production)
-        context.Database.Migrate();
-        Console.WriteLine("INFO: Database migrations applied successfully.");
-    }
-}
-catch (Exception ex)
-{
-    var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "ERROR: An error occurred during database migration. Service will start anyway.");
-}
-
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI();
