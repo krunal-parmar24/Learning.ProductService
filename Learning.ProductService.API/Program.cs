@@ -5,8 +5,8 @@ using Npgsql;
 var builder = WebApplication.CreateBuilder(args);
 
 // Parse DATABASE_URL for EF Core (handles Render's format)
-// Render sets DATABASE_URL as an environment variable
-var databaseUrl = builder.Configuration["DATABASE_URL"];
+// Render sets DATABASE_URL as an environment variable - check it FIRST before appsettings
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
 if (!string.IsNullOrEmpty(databaseUrl) && databaseUrl.StartsWith("postgres://"))
 {
@@ -24,19 +24,22 @@ if (!string.IsNullOrEmpty(databaseUrl) && databaseUrl.StartsWith("postgres://"))
             SslMode = SslMode.Require
         }.ConnectionString;
 
+        Console.WriteLine($"INFO: Using DATABASE_URL from environment variable. Connecting to {url.Host}");
         builder.Services.AddDbContext<ProductDbContext>(options => options.UseNpgsql(connectionString));
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Failed to parse DATABASE_URL: {ex.Message}. Falling back to DefaultConnection.");
+        Console.WriteLine($"ERROR: Failed to parse DATABASE_URL: {ex.Message}. Falling back to DefaultConnection.");
         builder.Services.AddDbContext<ProductDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")!));
     }
 }
 else
 {
+    var fallbackConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+    Console.WriteLine($"INFO: DATABASE_URL not found. Using DefaultConnection from appsettings.");
     builder.Services.AddDbContext<ProductDbContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")!));
+        options.UseNpgsql(fallbackConnection!));
 }
 
 // Add services to the container.
