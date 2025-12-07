@@ -40,13 +40,17 @@ else
 }
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+    context.Database.Migrate(); // Applies all pending migrations
+}
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
