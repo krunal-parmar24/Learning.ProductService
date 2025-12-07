@@ -56,24 +56,9 @@ try
     {
         var context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
         
-        // Ensure database exists first (creates __EFMigrationsHistory table if needed)
-        context.Database.EnsureCreated();
-        Console.WriteLine("INFO: Database ensured to exist.");
-        
-        // Get applied migrations - this now works because the history table exists
-        var appliedMigrations = context.Database.GetAppliedMigrations().ToList();
-        var pendingMigrations = context.Database.GetPendingMigrations().ToList();
-        
-        if (pendingMigrations.Any())
-        {
-            Console.WriteLine($"INFO: Found {pendingMigrations.Count} pending migration(s). Applying migrations...");
-            context.Database.Migrate();
-            Console.WriteLine("INFO: Database migrations applied successfully.");
-        }
-        else
-        {
-            Console.WriteLine($"INFO: Database is up to date. Applied migrations: {string.Join(", ", appliedMigrations.Select(m => m.Split('_').Last()))}");
-        }
+        // Apply migrations (preferred over EnsureCreated in production)
+        context.Database.Migrate();
+        Console.WriteLine("INFO: Database migrations applied successfully.");
     }
 }
 catch (Exception ex)
@@ -86,7 +71,11 @@ catch (Exception ex)
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection if not in production or if HTTPS is properly configured
+if (!app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 
