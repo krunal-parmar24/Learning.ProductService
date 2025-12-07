@@ -23,16 +23,16 @@ RUN dotnet publish -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
-# Set ASP.NET Core to listen on port 8080 (good default for containers)
+# Set ASP.NET Core to listen on port 8080
 ENV ASPNETCORE_URLS=http://+:8080
 
-# Set environment - can be overridden at runtime with -e ASPNETCORE_ENVIRONMENT=Development
+# Set environment to Production
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 # Copy published output
 COPY --from=build /app/publish .
 
-# Expose port (for local clarity; Render mainly uses PORT env var)
+# Expose port 8080
 EXPOSE 8080
 
 # Run the API
