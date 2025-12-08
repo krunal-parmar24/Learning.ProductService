@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Learning.ProductService.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("products")]
     public class ProductController : Controller
     {
         private readonly IMediator _mediator;
@@ -21,6 +21,20 @@ namespace Learning.ProductService.API.Controllers
             var query = new GetProductsQuery();
             var products = await _mediator.Send(query);
             return Ok(products);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetProductById([FromRoute] int id)
+        {
+            var query = new GetProductByIdQuery(id);
+            var product = await _mediator.Send(query);
+
+            if (product != null)
+            {
+                return Ok(product);
+            }
+
+            return NotFound();
         }
     }
 }

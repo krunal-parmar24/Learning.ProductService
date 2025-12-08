@@ -18,6 +18,12 @@ namespace Learning.ProductService.Infrastructure.Repositories
         }
 
         /// <inheritdoc />
+        public async Task<Product?> GetProductById(int id)
+        {
+            return await _dbContext.Products.SingleOrDefaultAsync(p => p.Id == id);
+        }
+
+        /// <inheritdoc />
         public async Task<List<Product>> GetProducts()
         {
             return await _dbContext.Products.ToListAsync();            
