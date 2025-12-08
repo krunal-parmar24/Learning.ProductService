@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Learning.ProductService.Application.Queries;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Learning.ProductService.API.Controllers
 {
@@ -6,10 +8,19 @@ namespace Learning.ProductService.API.Controllers
     [Route("[controller]")]
     public class ProductController : Controller
     {
-        [HttpGet]
-        public IActionResult Get()
+        private readonly IMediator _mediator;
+
+        public ProductController(IMediator mediator)
         {
-            return Ok(new List<string> { "Iphone 17", "Samsung Galaxy"});
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProducts()
+        {
+            var query = new GetProductsQuery();
+            var products = await _mediator.Send(query);
+            return Ok(products);
         }
     }
 }

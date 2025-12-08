@@ -1,4 +1,6 @@
-﻿using Learning.ProductService.Infrastructure.Data;
+﻿using Learning.ProductService.Application;
+using Learning.ProductService.Infrastructure;
+using Learning.ProductService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -46,6 +48,12 @@ else
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Register Application Layer
+builder.Services.AddApplicationServices();
+
+// Register Infrastructure Layer
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 var app = builder.Build();
 

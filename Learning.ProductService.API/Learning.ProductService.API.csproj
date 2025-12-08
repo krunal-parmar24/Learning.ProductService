@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Learning.ProductService.Application\Learning.ProductService.Application.csproj" />
     <ProjectReference Include="..\Learning.ProductService.Infrastructure\Learning.ProductService.Infrastructure.csproj" />
   </ItemGroup>
 
