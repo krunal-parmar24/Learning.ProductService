@@ -13,5 +13,11 @@ namespace Learning.ProductService.Infrastructure.Data
         }
 
         public DbSet<Product> Products => Set<Product>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("products");
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
