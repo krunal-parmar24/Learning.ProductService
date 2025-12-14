@@ -36,5 +36,12 @@ namespace Learning.ProductService.Infrastructure.Repositories
         {
             return await _dbContext.Products.ToListAsync();            
         }
+
+        /// <inheritdoc />
+        public async Task UpdateProduct(Product product)
+        {
+            _dbContext.Products.Update(product);
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

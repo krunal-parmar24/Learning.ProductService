@@ -46,5 +46,14 @@ namespace Learning.ProductService.API.Controllers
             var newlyAddedProductId = await _mediator.Send(command);
             return CreatedAtAction(nameof(AddProduct), new { id = newlyAddedProductId }, newlyAddedProductId);
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateProduct([FromRoute] int id, [FromBody] UpdateProductDto request)
+        {
+            var command = new UpdateProductCommand(id, request.Name, request.Description, request.Amount, request.Quantity);
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
     }
 }
