@@ -21,5 +21,13 @@
             CreatedAt = DateTime.UtcNow;
         }
 
+        public void UpdateDetails(string name, string description, decimal price, int quantity)
+        {
+            Name = name;
+            Description = description;
+            Price = price;
+            Quantity = quantity;
+            UpdatedAt = DateTime.UtcNow;
+        }
     }
 }

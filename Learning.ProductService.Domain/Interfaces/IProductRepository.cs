@@ -23,7 +23,14 @@ namespace Learning.ProductService.Domain.Interfaces
         /// Asynchronously adds a new product to the repository.
         /// </summary>
         /// <param name="product">The product object which is going to be added in system.</param>
-        /// <returns></returns>
+        /// <returns>Returns newly added product object.</returns>
         public Task<Product> AddProduct(Product product);
+
+        /// <summary>
+        /// Asynchronously updates an existing product in the repository.
+        /// </summary>
+        /// <param name="product">The product object which is going to be updated.</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public Task UpdateProduct(Product product);
     }
 }
