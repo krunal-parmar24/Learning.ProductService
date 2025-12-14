@@ -5,8 +5,8 @@
     /// </summary>
     public class BaseEntity
     {
-        public required int Id { get; set; }
-        public required DateTime CreatedAt { get; set; }
+        public int Id { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }
 }

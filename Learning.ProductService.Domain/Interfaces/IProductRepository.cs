@@ -18,5 +18,12 @@ namespace Learning.ProductService.Domain.Interfaces
         /// <returns>A task that represents the asynchronous operation. The task result contains the <see cref="Product"/> if
         /// found; otherwise, <see langword="null"/>.</returns>
         public Task<Product?> GetProductById(int id);
+
+        /// <summary>
+        /// Asynchronously adds a new product to the repository.
+        /// </summary>
+        /// <param name="product">The product object which is going to be added in system.</param>
+        /// <returns></returns>
+        public Task<Product> AddProduct(Product product);
     }
 }
