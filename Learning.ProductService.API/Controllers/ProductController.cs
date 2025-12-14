@@ -1,4 +1,6 @@
-﻿using Learning.ProductService.Application.Queries;
+﻿using Learning.ProductService.Application.Commands;
+using Learning.ProductService.Application.DTOs;
+using Learning.ProductService.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +37,14 @@ namespace Learning.ProductService.API.Controllers
             }
 
             return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct([FromBody] AddProductDto request)
+        {
+            var command = new AddProductCommand(request.Name, request.Description, request.Amount, request.Quantity);
+            var newlyAddedProductId = await _mediator.Send(command);
+            return CreatedAtAction(nameof(AddProduct), new { id = newlyAddedProductId }, newlyAddedProductId);
         }
     }
 }
