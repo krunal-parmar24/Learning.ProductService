@@ -6,5 +6,6 @@ namespace Learning.ProductService.Application.Queries
     /// <summary>
     /// Represents a request to retrieve a collection of products.
     /// </summary>
-    public record GetProductsQuery : IRequest<List<ProductDto>>;
+    ///<param name="ProductIds">The list of product IDs to retrieve.</param>
+    public record GetProductsQuery(List<int> ProductIds) : IRequest<List<ProductDto>>;
 }

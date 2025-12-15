@@ -32,9 +32,18 @@ namespace Learning.ProductService.Infrastructure.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<List<Product>> GetProducts()
+        public async Task<List<Product>> GetProducts(List<int> productIds)
         {
-            return await _dbContext.Products.ToListAsync();            
+            if (productIds.Count == 0)
+            {
+                return await _dbContext.Products.ToListAsync();
+            }
+            else
+            {
+                return await _dbContext.Products
+                       .Where(p => productIds.Contains(p.Id))
+                       .ToListAsync();
+            }
         }
 
         /// <inheritdoc />

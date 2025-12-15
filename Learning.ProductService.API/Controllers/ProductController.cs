@@ -18,9 +18,9 @@ namespace Learning.ProductService.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetProducts([FromQuery] List<int> productIds)
         {
-            var query = new GetProductsQuery();
+            var query = new GetProductsQuery(productIds);
             var products = await _mediator.Send(query);
             return Ok(products);
         }
