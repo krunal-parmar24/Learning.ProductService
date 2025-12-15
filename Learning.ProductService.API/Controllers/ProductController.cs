@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Learning.ProductService.API.Controllers
 {
     [ApiController]
-    [Route("products")]
+    [Route("api/v1/products")]
     public class ProductController : Controller
     {
         private readonly IMediator _mediator;
