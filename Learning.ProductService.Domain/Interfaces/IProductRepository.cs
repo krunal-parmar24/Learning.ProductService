@@ -7,9 +7,10 @@ namespace Learning.ProductService.Domain.Interfaces
         /// <summary>
         /// Asynchronously retrieves a list of available products.
         /// </summary>
+        /// <param name="productIds">The list of product IDs to retrieve.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="Product"/>
         /// objects representing the available products. The list will be empty if no products are found.</returns>
-        public Task<List<Product>> GetProducts();
+        public Task<List<Product>> GetProducts(List<int> productIds);
 
         /// <summary>
         /// Asynchronously retrieves a product with the specified identifier.

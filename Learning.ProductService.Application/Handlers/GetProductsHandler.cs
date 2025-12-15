@@ -19,7 +19,7 @@ namespace Learning.ProductService.Application.Handlers
 
         public async Task<List<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
         {
-            var products = await _productRepository.GetProducts();
+            var products = await _productRepository.GetProducts(request.ProductIds);
             return products.Select(x => new ProductDto(
                 x.Id,
                 x.Name,
